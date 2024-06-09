@@ -8,7 +8,7 @@ const NewsList: FC<{ news: NewsType[]}> = ({ news }) => (
       {
         news.map(({ id, slug, image, title }) => (
           <li key={id}>
-            <Link href={`news/${slug}`}>
+            <Link href={`/news/${slug}`}>
               <Image src={`/images/news/${image}`} alt={title} width={500} height={500}/>
               <span>{title}</span>
             </Link>

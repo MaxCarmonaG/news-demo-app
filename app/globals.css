@@ -154,7 +154,8 @@ ul {
   border: none;
   box-shadow: 0 0 10px 0 #181817;
   max-width: 50rem;
-  width: 100%;
+  width: 90%;
+  max-height: 50rm;
 }
 
 .modal h2,
@@ -190,4 +191,14 @@ ul {
 .error {
   text-align: center;
   margin-top: 3rem;
+}
+
+.fullscreen-image {
+  position: relative;
+  height: 70vw;
+  max-height: 50rem;
+}
+
+.fullscreen-image img {
+  object-fit: contain;
 }

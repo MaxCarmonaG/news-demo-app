@@ -19,3 +19,7 @@ export interface NewsType {
   date: string;
   content: string;
 }
+
+export interface NavLinkProps {
+  href: string;
+}

@@ -1,14 +1,19 @@
-import { FC } from "react";
-import NewsList from "@/components/NewsList";
-import { getAvailableNewsYears, getNewsForYear, getNewsForYearAndMonth, getAvailableNewsMonths } from "@/lib";
-import { PagePros } from "@/types";
-import Link from "next/link";
+import { FC } from 'react';
+import NewsList from '@/components/NewsList';
+import { getAvailableNewsYears, getNewsForYear, getNewsForYearAndMonth, getAvailableNewsMonths } from '@/lib';
+import { PagePros } from '@/types';
+import Link from 'next/link';
 
 const FilteredNewsPage: FC<PagePros> = ({ params }) => {
   const selectedYear = params.filter?.[0];
   const selectedMonth = params.filter?.[1];
-  
-  const links = selectedYear ? getAvailableNewsMonths(selectedYear) : getAvailableNewsYears();
+
+  const links = (selectedMonth && selectedYear) 
+    ? []
+    : selectedYear
+      ? getAvailableNewsMonths(selectedYear)
+      : getAvailableNewsYears()
+  ;
 
   const news = (selectedMonth && selectedYear)
     ? getNewsForYearAndMonth(selectedYear, selectedMonth)
@@ -16,6 +21,13 @@ const FilteredNewsPage: FC<PagePros> = ({ params }) => {
       ? getNewsForYear(selectedYear)
       : []
   ;
+
+  if (
+    (selectedYear && !getAvailableNewsYears().includes(+selectedYear)) ||
+    selectedMonth && !getAvailableNewsMonths(selectedYear).includes(+selectedMonth)
+  ) {
+    throw new Error('Invalid filter');
+  }
     
   return (
     <>

@@ -1,7 +1,8 @@
+import { FC } from 'react';
 import Link from 'next/link';
-import classes from './MainHeader.module.css';
+import NavLink from './NavLink';
 
-const MainHeader = () => (
+const MainHeader: FC = () => (
   <header id="main-header">
     <div id="logo">
       <Link href="/">NextNews</Link>
@@ -9,7 +10,10 @@ const MainHeader = () => (
     <nav>
       <ul>
         <li>
-          <Link href="/news">News</Link>
+          <NavLink href="/news">News</NavLink>
+        </li>
+        <li>
+          <NavLink href="/archive">Archive</NavLink>
         </li>
       </ul>
     </nav>
