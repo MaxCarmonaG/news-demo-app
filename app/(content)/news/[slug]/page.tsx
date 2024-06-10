@@ -1,13 +1,13 @@
 import { FC } from "react";
 import Image from 'next/image';
 import { PagePros } from "@/types";
-import { DUMMY_NEWS } from "@/mock-news";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getNewsItem } from "@/lib";
 
 const NewsDetailPage: FC<PagePros> = ({ params }) => {
   const newsSlug = params.slug;
-  const newsItem = DUMMY_NEWS.find(({ slug }) => slug === newsSlug);
+  const newsItem = getNewsItem(newsSlug);
 
   if (!newsItem) notFound();
 

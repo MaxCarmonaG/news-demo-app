@@ -1,13 +1,17 @@
 
+import { FC } from 'react';
+import { getAllNews } from '@/lib';
 import NewsList from '@/components/NewsList';
 
-import { DUMMY_NEWS } from '@/mock-news';
-
-const NewsPage = () => (
-  <>
-    <h1>New Page</h1>
-    <NewsList news={DUMMY_NEWS} />
-  </>
-);
+const NewsPage: FC = () => {
+  const news = getAllNews();
+  
+  return (
+    <>
+      <h1>New Page</h1>
+      <NewsList news={news} />
+    </>
+  );
+};
 
 export default NewsPage;

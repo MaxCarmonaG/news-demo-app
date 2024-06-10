@@ -1,48 +1,46 @@
-import { DUMMY_NEWS } from '@/mock-news';
+import sql from "better-sqlite3";
 
-const numArr: number[] = [];
+import { NewsType } from "@/types";
 
-export function getAllNews() {
-  return DUMMY_NEWS;
-}
+const db = sql("./database/data.db");
 
-export function getLatestNews() {
-  return DUMMY_NEWS.slice(0, 3);
-}
+export const getAllNews = () =>
+  db.prepare<[], NewsType>("SELECT * FROM news").all();
 
-export const getAvailableNewsYears = () => {
-  return DUMMY_NEWS.reduce((years, news) => {
-    const year = new Date(news.date).getFullYear();
-    if (!years.includes(year)) {
-      return [...years, year];
-    }
-    return years;
-  }, numArr).sort((a, b) => b - a);
-}
+export const getNewsItem = (slug: string) =>
+  db.prepare<string, NewsType>("SELECT * FROM news WHERE slug = ?").get(slug);
 
-export const getAvailableNewsMonths = (year: string) => {
-  return DUMMY_NEWS.reduce((months, news) => {
-    const newsYear = new Date(news.date).getFullYear();
-    if (newsYear === +year) {
-      const month = new Date(news.date).getMonth();
-      if (!months.includes(month)) {
-        return [...months, month + 1];
-      }
-    }
-    return months;
-  }, numArr).sort((a, b) => b - a);
-}
+export const getLatestNews = () =>
+  db
+    .prepare<[], NewsType>("SELECT * FROM news ORDER BY date DESC LIMIT 3")
+    .all();
 
-export function getNewsForYear(year: string) {
-  return DUMMY_NEWS.filter(
-    (news) => new Date(news.date).getFullYear() === +year
-  );
-}
+export const getAvailableNewsYears = () =>
+  db
+    .prepare<[], { year: string }>(
+      "SELECT DISTINCT strftime('%Y', date) as year FROM news"
+    )
+    .all()
+    .map(({ year }) => year);
 
-export function getNewsForYearAndMonth(year: string, month: string) {
-  return DUMMY_NEWS.filter((news) => {
-    const newsYear = new Date(news.date).getFullYear();
-    const newsMonth = new Date(news.date).getMonth() + 1;
-    return newsYear === +year && newsMonth === +month;
-  });
-}
+export const getAvailableNewsMonths = (year: string) =>
+  db
+    .prepare<string, { month: string }>(
+      "SELECT DISTINCT strftime('%m', date) as month FROM news WHERE strftime('%Y', date) = ?"
+    )
+    .all(year)
+    .map(({ month }) => month);
+
+export const getNewsForYear = (year: string) =>
+  db
+    .prepare<string, NewsType>(
+      "SELECT * FROM news WHERE strftime('%Y', date) = ? ORDER BY date DESC"
+    )
+    .all(year);
+
+export const getNewsForYearAndMonth = (year: string, month: string) =>
+  db
+    .prepare<string[], NewsType>(
+      "SELECT * FROM news WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ? ORDER BY date DESC"
+    )
+    .all(year, month);
